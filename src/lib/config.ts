@@ -9,8 +9,17 @@
 /*
  * type "party": choose कांग्रेस / बीजेपी / निर्दलीय (निर्दलीय asks for a name).
  * type "name":  only the candidate's name is written; no party choice.
+ * type "ward":  the villager picks their own ward (1..wards) and writes the
+ *               name for that ward only. Saved as "<label> - वार्ड <n>".
  */
-export type Post = { id: string; label: string; title: string; tag: string; type: "party" | "name" };
+export type Post = {
+  id: string;
+  label: string;
+  title: string;
+  tag: string;
+  type: "party" | "name" | "ward";
+  wards?: number;
+};
 export type Party = { id: string; label: string; hint: string; icon: string; color: string; independent?: boolean };
 
 export const SURVEY = {
@@ -30,9 +39,7 @@ export const SURVEY = {
 export const POSTS: Post[] = [
   { id: "panchayat_samiti", label: "पंचायत समिति सदस्य", title: "पंचायत समिति सदस्य (Panchayat Samiti Member)", tag: "पंचायत समिति", type: "party" },
   { id: "sarpanch", label: "सरपंच", title: "सरपंच (Sarpanch)", tag: "मुख्य पद", type: "party" },
-  { id: "ward_1", label: "वार्ड पंच - वार्ड 1", title: "वार्ड पंच — वार्ड संख्या 1", tag: "वार्ड पंच", type: "name" },
-  { id: "ward_2", label: "वार्ड पंच - वार्ड 2", title: "वार्ड पंच — वार्ड संख्या 2", tag: "वार्ड पंच", type: "name" },
-  { id: "ward_3", label: "वार्ड पंच - वार्ड 3", title: "वार्ड पंच — वार्ड संख्या 3", tag: "वार्ड पंच", type: "name" },
+  { id: "ward", label: "वार्ड पंच", title: "वार्ड पंच (Ward Panch)", tag: "अपना वार्ड", type: "ward", wards: 17 },
 ];
 
 export const PARTIES: Party[] = [
@@ -47,3 +54,6 @@ export const cleanName = (s: string) => s.trim().replace(/\s+/g, " ").normalize(
 
 const HINDI_DIGITS = "०१२३४५६७८९";
 export const hindiNumber = (n: number) => String(n).replace(/\d/g, (d) => HINDI_DIGITS[Number(d)]);
+
+/** Label a ward answer is saved under, e.g. "वार्ड पंच - वार्ड 5". */
+export const wardLabel = (post: Post, ward: number) => `${post.label} - वार्ड ${ward}`;
